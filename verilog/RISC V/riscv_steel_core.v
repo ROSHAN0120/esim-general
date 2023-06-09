@@ -256,7 +256,7 @@ module riscv_steel_core (
     
   reg   [31:0]  program_counter;
   reg   [31:0]  next_program_counter;
-  reg   [31:0]  writeback_multiplexer_output;
+  reg   [31:0]  writeback_multiplexer_o;
   reg   [4:0 ]  instruction_rd_address_stage3;  
   reg   [11:0]  instruction_csr_address_stage3;  
   reg   [31:0]  rs1_data_stage3;  
@@ -519,7 +519,7 @@ module riscv_steel_core (
     .write_enable  (flush_pipeline ?
                     1'b0 :
                     integer_file_write_enable_stage3      ),
-    .rd_data       (writeback_multiplexer_output          ),
+    .rd_data       (writeback_multiplexer_o          ),
     .rs1_data      (rs1_data                              ),
     .rs2_data      (rs2_data                              )
 
@@ -609,13 +609,13 @@ module riscv_steel_core (
   
   always @* begin
     case (writeback_mux_selector_stage3)
-      `WB_ALU:          writeback_multiplexer_output = alu_o;
-      `WB_LOAD_UNIT:    writeback_multiplexer_output = load_data;
-      `WB_UPPER_IMM:    writeback_multiplexer_output = immediate_stage3;
-      `WB_TARGET_ADDER: writeback_multiplexer_output = target_address_adder_stage3;
-      `WB_CSR:          writeback_multiplexer_output = csr_data_out;
-      `WB_PC_PLUS_4:    writeback_multiplexer_output = program_counter_plus_4_stage3;
-      default:          writeback_multiplexer_output = alu_o;
+      `WB_ALU:          writeback_multiplexer_o = alu_o;
+      `WB_LOAD_UNIT:    writeback_multiplexer_o = load_data;
+      `WB_UPPER_IMM:    writeback_multiplexer_o = immediate_stage3;
+      `WB_TARGET_ADDER: writeback_multiplexer_o = target_address_adder_stage3;
+      `WB_CSR:          writeback_multiplexer_o = csr_data_out;
+      `WB_PC_PLUS_4:    writeback_multiplexer_o = program_counter_plus_4_stage3;
+      default:          writeback_multiplexer_o = alu_o;
     endcase
   end
 
@@ -1600,7 +1600,7 @@ module csr_file (
     endcase
   end
   
-  always @(posedge clock) begin : m_mode_fsm_current_state_register
+  always @(posedge clock) begin : m_mode_fsm_current_state_r
     if(reset)
       current_state <= STATE_RESET;
     else if (clock_enable)
