@@ -213,46 +213,31 @@ Top Module:    riscv_steel_core
 // TOP MODULE: RISC-V STEEL CORE                                                                 //
 //-----------------------------------------------------------------------------------------------//
 module riscv_steel_core (
+input  wire           clock,
+input  wire           reset,
+input  wire           halt,
+output wire           ready,
+input  wire   [31:0]  boot_ad,
+output wire   [31:0]  ins_ad,
+output wire           ins_ad_valid,
+input  wire   [31:0]  ins_in,
+input  wire           ins_in_valid,
+output wire   [31:0]  data_rw_ad,
+output wire           data_rw_ad_valid,
+output wire   [31:0]  data_out,
+output wire           data_write_request,
+output wire   [3:0 ]  data_write_strobe,
+input  wire   [31:0]  data_in,
+input  wire           data_rw_valid,
+input  wire           irq_external,
+output wire           irq_external_ack,
+input  wire           irq_timer,
+output wire           irq_timer_ack,
+input  wire           irq_software,
+output wire           irq_software_ack,
+input  wire   [63:0]  real_time
 
-  // Basic system signals
-  
-  input  wire           clock,
-  input  wire           reset,
-  input  wire           halt,
-  output wire           ready,
-  input  wire   [31:0]  boot_address,
-
-  // Instruction fetch interface
-
-  output wire   [31:0]  instruction_address,
-  output wire           instruction_address_valid,
-  input  wire   [31:0]  instruction_in,
-  input  wire           instruction_in_valid,
-    
-  // Data fetch/write interface
-
-  output wire   [31:0]  data_rw_address,
-  output wire           data_rw_address_valid,
-  output wire   [31:0]  data_out,
-  output wire           data_write_request,
-  output wire   [3:0 ]  data_write_strobe,
-  input  wire   [31:0]  data_in,
-  input  wire           data_rw_valid,
-  
-  // Interrupt signals (hardwire inputs to zero if unused)
-
-  input  wire           irq_external,
-  output wire           irq_external_ack,
-  input  wire           irq_timer,
-  output wire           irq_timer_ack,
-  input  wire           irq_software,  
-  output wire           irq_software_ack,
-
-  // Real Time Counter (hardwire to zero if unused)
-
-  input  wire   [63:0]  real_time
-
-  );
+);
     
   reg   [31:0]  program_counter;
   reg   [31:0]  next_program_counter;
